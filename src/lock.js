@@ -169,9 +169,6 @@ module.exports = function () {
 		}
 	}
 
-	this.readLock = readLock;
-	this.writeLock = writeLock;
-
 	/**
 	 * TODO
 	 *
@@ -183,7 +180,7 @@ module.exports = function () {
 	 * @param [options.timeout] {Number} TODO
 	 * @param [options.timeoutCallback] {Function} TODO
 	 */
-	this.readSection = function (key, callback, options) {
+	function readSection(key, callback, options) {
 		if (typeof key !== 'function') {
 			if (!options) {
 				options = {};
@@ -198,7 +195,7 @@ module.exports = function () {
 				release();
 			}, options);
 		}
-	};
+	}
 
 	/**
 	 * TODO
@@ -211,7 +208,7 @@ module.exports = function () {
 	 * @param [options.timeout] {Number} TODO
 	 * @param [options.timeoutCallback] {Function} TODO
 	 */
-	this.writeSection = function (key, callback, options) {
+	function writeSection(key, callback, options) {
 		if (typeof key !== 'function') {
 			if (!options) {
 				options = {};
@@ -225,6 +222,94 @@ module.exports = function () {
 				callback.call(this);
 				release();
 			}, options);
+		}
+	}
+
+	this.readLock = readLock;
+	this.writeLock = writeLock;
+	this.readSection = readSection;
+	this.writeSection = writeSection;
+
+	this.async = {
+		/**
+		 * TODO
+		 *
+		 * @method async.readLock
+		 * @param [key] {String} The name of the lock to read-acquire. The
+		 * default lock will be requested if no key is specified.
+		 * @param callback {Function} A user-defined function invoked as soon as
+		 * a read lock is acquired.
+		 * @param callback.release {Function} A function that releases the lock.
+		 *
+		 * This must be called by the ReadWriteLock user at some point,
+		 * otherwise the read lock will remain and prevent any writers from
+		 * operating. Anyway you do not necessarily need to call it inside the
+		 * `callback` function: you can save a reference to the `release`
+		 * function and call it later.
+		 * @param [options] {Object} Further optional settings.
+		 * @param [options.scope] {Object} An optional object to use as `this`
+		 * when calling the `callback` function.
+		 * @param [options.timeout] {Number} A timeout in milliseconds within
+		 * which the lock must be acquired; if a writer is still operating and
+		 * the timeout expires the request is canceled and no lock is acquired.
+		 * @param [options.timeoutCallback] {Function} An optional user-defined
+		 * callback function that gets invokes in case the timeout expires
+		 * before the lock can be acquired.
+		 */
+		readLock: function (key, callback, options) {
+			if (typeof key !== 'function') {
+				readLock(key, function (release) {
+					callback.call(this, null, release);
+				}, options);
+			} else {
+				callback = key;
+				options = callback;
+				readLock(function (release) {
+					callback.call(this, null, release);
+				}, options);
+			}
+		},
+
+		writeLock: function (key, callback, options) {
+			if (typeof key !== 'function') {
+				writeLock(key, function (release) {
+					callback.call(this, null, release);
+				}, options);
+			} else {
+				callback = key;
+				options = callback;
+				writeLock(function (release) {
+					callback.call(this, null, release);
+				}, options);
+			}
+		},
+
+		readSection: function (key, callback, options) {
+			if (typeof key !== 'function') {
+				readSection(key, function (release) {
+					callback.call(this, null, release);
+				}, options);
+			} else {
+				callback = key;
+				options = callback;
+				readSection(function (release) {
+					callback.call(this, null, release);
+				}, options);
+			}
+		},
+
+		writeSection: function (key, callback, options) {
+			if (typeof key !== 'function') {
+				writeSection(key, function (release) {
+					callback.call(this, null, release);
+				}, options);
+			} else {
+				callback = key;
+				options = callback;
+				writeSection(function (release) {
+					callback.call(this, null, release);
+				}, options);
+			}
 		}
 	};
 };

@@ -45,6 +45,12 @@ module.exports = function (grunt) {
 		},
 
 		uglify: {
+			options: {
+				banner: '/*! ReadWriteLock - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+					' * Author: Alberto La Rocca <a71104@gmail.com> (https://github.com/71104)\n' +
+					' * Released under the MIT license\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %> Alberto La Rocca */\n'
+			},
 			dist: {
 				files: {
 					'lib/lock.js': [
