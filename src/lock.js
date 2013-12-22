@@ -68,7 +68,44 @@ module.exports = function () {
 			callback = key;
 			lock = defaultLock;
 		}
-		// TODO
+		if (!options) {
+			options = {};
+		}
+		var release = (function () {
+			var released = false;
+			return function () {
+				if (!released) {
+					released = true;
+					lock.readers--;
+					if (lock.queue.length) {
+						lock.queue[0]();
+					}
+				}
+			};
+		}());
+		if ((lock.readers <= 0) || lock.queue.length) {
+			lock.queue.push(function () {
+				if (lock.readers >= 0) {
+					lock.queue.shift();
+					lock.readers++;
+					if (options.hasOwnProperty('scope')) {
+						callback.call(options.scope, release);
+					} else {
+						callback(release);
+					}
+					if (lock.queue.length) {
+						lock.queue[0]();
+					}
+				}
+			});
+		} else {
+			lock.readers++;
+			if (options.hasOwnProperty('scope')) {
+				callback.call(options.scope, release);
+			} else {
+				callback(release);
+			}
+		}
 	}
 
 	/**
@@ -83,8 +120,53 @@ module.exports = function () {
 	 * @param [options.timeout] {Number} TODO
 	 * @param [options.timeoutCallback] {Function} TODO
 	 */
-	function writeLock() {
-		// TODO
+	function writeLock(key, callback, options) {
+		var lock;
+		if (typeof key !== 'function') {
+			if (!table.hasOwnProperty(key)) {
+				table[key] = new Lock();
+			}
+			lock = table[key];
+		} else {
+			options = callback;
+			callback = key;
+			lock = defaultLock;
+		}
+		if (!options) {
+			options = {};
+		}
+		var release = (function () {
+			var released = false;
+			return function () {
+				if (!released) {
+					released = true;
+					lock.readers = 0;
+					if (lock.queue.length) {
+						lock.queue[0]();
+					}
+				}
+			};
+		}());
+		if (lock.readers || lock.queue.length) {
+			lock.queue.push(function () {
+				if (!lock.readers) {
+					lock.queue.shift();
+					lock.readers = -1;
+					if (options.hasOwnProperty('scope')) {
+						callback.call(options.scope, release);
+					} else {
+						callback(release);
+					}
+				}
+			});
+		} else {
+			lock.readers = -1;
+			if (options.hasOwnProperty('scope')) {
+				callback.call(options.scope, release);
+			} else {
+				callback(release);
+			}
+		}
 	}
 
 	this.readLock = readLock;
