@@ -54,15 +54,18 @@ module.exports = function (grunt) {
 			}
 		},
 
-		yuidoc: {
-		}
+		qunit: {},
+
+		yuidoc: {}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
+	grunt.loadNpmTasks('grunt-contrib-qunit');
 
 	grunt.registerTask('default', ['jshint', 'uglify']);
-	grunt.registerTask('all', ['clean', 'jshint', 'uglify', 'yuidoc']);
+	grunt.registerTask('test', ['jshint', 'uglify', 'qunit']);
+	grunt.registerTask('all', ['clean', 'jshint', 'uglify', 'qunit', 'yuidoc']);
 };
