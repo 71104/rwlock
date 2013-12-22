@@ -184,7 +184,20 @@ module.exports = function () {
 	 * @param [options.timeoutCallback] {Function} TODO
 	 */
 	this.readSection = function (key, callback, options) {
-		// TODO
+		if (typeof key !== 'function') {
+			if (!options) {
+				options = {};
+			}
+			readLock(key, function (release) {
+				callback.call(this);
+				release();
+			}, options);
+		} else {
+			readLock(function (release) {
+				callback.call(this);
+				release();
+			}, options);
+		}
 	};
 
 	/**
@@ -199,6 +212,19 @@ module.exports = function () {
 	 * @param [options.timeoutCallback] {Function} TODO
 	 */
 	this.writeSection = function (key, callback, options) {
-		// TODO
+		if (typeof key !== 'function') {
+			if (!options) {
+				options = {};
+			}
+			writeLock(key, function (release) {
+				callback.call(this);
+				release();
+			}, options);
+		} else {
+			writeLock(function (release) {
+				callback.call(this);
+				release();
+			}, options);
+		}
 	};
 };
