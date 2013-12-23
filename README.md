@@ -77,14 +77,36 @@ Every ReadWriteLock instance allows you to work on a virtually unlimited number 
 
 Locks are identified by names called "keys". Every exposed method has an optional "key" first argument indicating the lock to work on; if you don't specify a key, the default lock is used.
 
-TODO
+Example:
+
+```javascript
+lock.writeLock('lock1', function (release) {
+	console.log('writing 1...');
+	lock.writeLock('lock2', function (release) {
+		console.log('writing 2...');
+		release();
+		console.log('done 2.');
+	});
+	release();
+	console.log('done 1.');
+});
+```
+
+The previous example logs:
+
+```
+writing 1...
+writing 2...
+done 1.
+done 2.
+```
 
 [async](https://npmjs.org/package/async) compatibility
 ------------------------------------------------------
 
-The ReadWriteLock class does not return errors to your callbacks, but many APIs in Node do. The `async` modules uses that as a convention: callbacks usually receive two arguments, a possibly `null` error object and the actual result in case there is no error.
+The ReadWriteLock class does not return errors to your callbacks, but many APIs in Node do. The `async` module uses that as a convention: callbacks usually receive two arguments, a possibly `null` error object and the actual result in case there is no error.
 
-To aid `async` compatibility, ReadWriteLock sends `null` errors if you specify the `async` flag like in the following examples:
+To aid `async` compatibility, ReadWriteLock sends `null` errors if you specify the `async` flag like in the following example:
 
 ```javascript
 lock.async.readLock(function (error, release) {
