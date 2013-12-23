@@ -1,6 +1,6 @@
 var ReadWriteLock = require('../lib/lock.js');
 
-module.exports.readerOperates = function (test) {
+module.exports.oneReaderOperates = function (test) {
 	var lock = new ReadWriteLock();
 	lock.readLock(function (release) {
 		release();
@@ -9,12 +9,50 @@ module.exports.readerOperates = function (test) {
 	});
 };
 
-module.exports.writerOperates = function (test) {
+module.exports.twoReadersOperate = function (test) {
+	var lock = new ReadWriteLock();
+	var count = 0;
+	lock.readLock(function (release) {
+		test.ok(true);
+		release();
+		if (++count > 1) {
+			test.done();
+		}
+	});
+	lock.readLock(function (release) {
+		test.ok(true);
+		release();
+		if (++count > 1) {
+			test.done();
+		}
+	});
+};
+
+module.exports.oneWriterOperates = function (test) {
 	var lock = new ReadWriteLock();
 	lock.writeLock(function (release) {
 		release();
 		test.ok(true);
 		test.done();
+	});
+};
+
+module.exports.twoWritersOperate = function (test) {
+	var lock = new ReadWriteLock();
+	var count = 0;
+	lock.writeLock(function (release) {
+		test.ok(true);
+		release();
+		if (++count > 1) {
+			test.done();
+		}
+	});
+	lock.writeLock(function (release) {
+		test.ok(true);
+		release();
+		if (++count > 1) {
+			test.done();
+		}
 	});
 };
 
