@@ -8,6 +8,15 @@ Main rules:
 - there may only be one writer at a time,
 - there may be no writer if there are one or more readers already.
 
+Installation
+------------
+
+It's on [npmjs](https://npmjs.org/package/rwlock):
+
+```bash
+$ npm install rwlock
+```
+
 Basic usage
 -----------
 
