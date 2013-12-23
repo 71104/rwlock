@@ -52,6 +52,46 @@ lock.readLock(function (release) {
 });
 ```
 
+Upgrading to a write lock
+-------------------------
+
+ReadWriteLock does not explicitly support upgrading but you can take advantage of the asynchronous-ness:
+
+```javascript
+lock.readLock(function (release) {
+	// read stuff here
+
+	// ok, I now realize I need to write
+
+	// this will be queued
+	lock.writeLock(function (release) {
+		// you can write here
+
+		release();
+
+		// everything is now released.
+	});
+
+	// release the read lock, this will activate the writer
+	release();
+});
+```
+
+Downgrading to a read lock
+--------------------------
+
+Similar to upgrading:
+
+```javascript
+lock.writeLock(function (release) {
+	lock.readLock(function (release) {
+		// ...
+		release();
+	});
+	release();
+});
+```
+
 Sections
 --------
 
