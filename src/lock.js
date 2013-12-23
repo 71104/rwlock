@@ -109,16 +109,38 @@ module.exports = function () {
 	}
 
 	/**
-	 * TODO
+	 * Acquires a write lock and invokes a user-defined callback as soon as it
+	 * is acquired.
+	 *
+	 * The operation might require some time as there may be one or more
+	 * readers. You can optionally specify a timeout in milliseconds: if it
+	 * expires before a read lock can be acquired, this request is canceled and
+	 * no lock will be acquired.
+	 *
+	 * The `key` argument allows you to work on a specific lock; omitting it
+	 * will request the default lock.
 	 *
 	 * @method writeLock
-	 * @param [key] {String} TODO
-	 * @param callback {Function} TODO
-	 * @param callback.release {Function} TODO
-	 * @param [options] {Object} TODO
-	 * @param [options.scope] {Object} TODO
-	 * @param [options.timeout] {Number} TODO
-	 * @param [options.timeoutCallback] {Function} TODO
+	 * @param [key] {String} The name of the lock to write-acquire. The default
+	 * lock will be requested if no key is specified.
+	 * @param callback {Function} A user-defined function invoked as soon as a
+	 * write lock is acquired.
+	 * @param callback.release {Function} A function that releases the lock.
+	 *
+	 * This must be called by the ReadWriteLock user at some point, otherwise
+	 * the write lock will remain and prevent future readers from operating.
+	 * Anyway you do not necessarily need to call it inside the `callback`
+	 * function: you can save a reference to the `release` function and call it
+	 * later.
+	 * @param [options] {Object} Further optional settings.
+	 * @param [options.scope] {Object} An optional object to use as `this` when
+	 * calling the `callback` function.
+	 * @param [options.timeout] {Number} A timeout in milliseconds within which
+	 * the lock must be acquired; if one ore more readers are still operating
+	 * and the timeout expires the request is canceled and no lock is acquired.
+	 * @param [options.timeoutCallback] {Function} An optional user-defined
+	 * callback function that gets invokes in case the timeout expires before
+	 * the lock can be acquired.
 	 */
 	function writeLock(key, callback, options) {
 		var lock;
@@ -270,6 +292,32 @@ module.exports = function () {
 			}
 		},
 
+		/**
+		 * TODO
+		 *
+		 * @method async.writeLock
+		 * @param [key] {String} The name of the lock to write-acquire. The
+		 * default lock will be requested if no key is specified.
+		 * @param callback {Function} A user-defined function invoked as soon as
+		 * a write lock is acquired.
+		 * @param callback.release {Function} A function that releases the lock.
+		 *
+		 * This must be called by the ReadWriteLock user at some point,
+		 * otherwise the write lock will remain and prevent future readers from
+		 * operating. Anyway you do not necessarily need to call it inside the
+		 * `callback` function: you can save a reference to the `release`
+		 * function and call it later.
+		 * @param [options] {Object} Further optional settings.
+		 * @param [options.scope] {Object} An optional object to use as `this`
+		 * when calling the `callback` function.
+		 * @param [options.timeout] {Number} A timeout in milliseconds within
+		 * which the lock must be acquired; if one ore more readers are still
+		 * operating and the timeout expires the request is canceled and no lock
+		 * is acquired.
+		 * @param [options.timeoutCallback] {Function} An optional user-defined
+		 * callback function that gets invokes in case the timeout expires
+		 * before the lock can be acquired.
+		 */
 		writeLock: function (key, callback, options) {
 			if (typeof key !== 'function') {
 				writeLock(key, function (release) {
