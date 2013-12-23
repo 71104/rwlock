@@ -91,6 +91,44 @@
 </pre></div>
 
 <h2>
+<a name="upgrading-to-a-write-lock" class="anchor" href="#upgrading-to-a-write-lock"><span class="octicon octicon-link"></span></a>Upgrading to a write lock</h2>
+
+<p>ReadWriteLock does not explicitly support upgrading but you can take advantage of the asynchronous-ness:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// read stuff here</span>
+
+    <span class="c1">// ok, I now realize I need to write</span>
+
+    <span class="c1">// this will be queued</span>
+    <span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// you can write here</span>
+
+        <span class="nx">release</span><span class="p">();</span>
+
+        <span class="c1">// everything is now released.</span>
+    <span class="p">});</span>
+
+    <span class="c1">// release the read lock, this will activate the writer</span>
+    <span class="nx">release</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="downgrading-to-a-read-lock" class="anchor" href="#downgrading-to-a-read-lock"><span class="octicon octicon-link"></span></a>Downgrading to a read lock</h2>
+
+<p>Similar to upgrading:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="nx">release</span><span class="p">();</span>
+    <span class="p">});</span>
+    <span class="nx">release</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
 <a name="sections" class="anchor" href="#sections"><span class="octicon octicon-link"></span></a>Sections</h2>
 
 <p>"Sections" are functions executed within a read or write lock and need not be
