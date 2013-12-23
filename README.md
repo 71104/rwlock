@@ -97,8 +97,8 @@ The previous example logs:
 ```
 writing 1...
 writing 2...
-done 1.
 done 2.
+done 1.
 ```
 
 [async](https://npmjs.org/package/async) compatibility
