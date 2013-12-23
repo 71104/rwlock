@@ -2,12 +2,12 @@
  * Asynchronous read/write lock implementation for Node.
  *
  * The rules:
- *	- there may be zero or more readers at the same time,
- *	- there may be only one writer at a time,
- *	- if there is a writer there may be no readers.
+ * - there may be zero or more readers at the same time,
+ * - there may be only one writer at a time,
+ * - if there is a writer there may be no readers.
  *
  * ReadWriteLock also supports multiple independent locks identified by custom
- * user-defined strings called `keys'.
+ * user-defined strings called "keys".
  *
  * @class ReadWriteLock
  * @constructor

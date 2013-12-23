@@ -70,7 +70,19 @@ module.exports = function (grunt) {
 			}
 		},
 
-		yuidoc: {}
+		yuidoc: {
+			compile: {
+				name: 'ReadWriteLock',
+				description: '<%= pkg.description %>',
+				version: '<%= pkg.version %>',
+				url: '<%= pkg.homepage %>',
+				options: {
+					paths: 'src/',
+					outdir: 'doc/',
+					linkNatives: 'true'
+				}
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
