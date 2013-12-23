@@ -83,7 +83,7 @@ module.exports = function () {
 				}
 			};
 		}());
-		if ((lock.readers <= 0) || lock.queue.length) {
+		if ((lock.readers < 0) || lock.queue.length) {
 			lock.queue.push(function () {
 				if (lock.readers >= 0) {
 					lock.queue.shift();
