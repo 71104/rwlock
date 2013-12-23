@@ -60,7 +60,15 @@ module.exports = function (grunt) {
 			}
 		},
 
-		qunit: {},
+		nodeunit: {
+			dist: {
+				files: {
+					src: [
+						'test/all.js'
+					]
+				}
+			}
+		},
 
 		yuidoc: {}
 	});
@@ -68,10 +76,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
 
 	grunt.registerTask('default', ['jshint', 'uglify']);
-	grunt.registerTask('test', ['jshint', 'uglify', 'qunit']);
-	grunt.registerTask('all', ['clean', 'jshint', 'uglify', 'qunit', 'yuidoc']);
+	grunt.registerTask('test', ['jshint', 'uglify', 'nodeunit']);
+	grunt.registerTask('all', ['clean', 'jshint', 'uglify', 'nodeunit', 'yuidoc']);
 };
