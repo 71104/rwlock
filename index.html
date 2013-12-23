@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ReadWriteLock by 71104</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>ReadWriteLock</h1>
+        <p>Asynchronous read / write lock implementation for Node.js</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/71104/rwlock" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/71104/rwlock/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/71104/rwlock/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
+<a name="rwlock" class="anchor" href="#rwlock"><span class="octicon octicon-link"></span></a>rwlock</h1>
+
+<p>Asynchronous read/write lock implementation for Node.js.</p>
+
+<p>Main rules:</p>
+
+<ul>
+<li>there may be zero or more readers at a time,</li>
+<li>there may only be one writer at a time,</li>
+<li>there may be no writer if there are one or more readers already.</li>
+</ul><h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+
+<p>Requiring the package, creating an instance:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ReadWriteLock</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'rwlock'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ReadWriteLock</span><span class="p">();</span>
+</pre></div>
+
+<p>Acquiring a read lock:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do stuff</span>
+
+    <span class="nx">release</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Acquiring a write lock:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do stuff</span>
+
+    <span class="nx">release</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Locks can be released later:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// not ready to release yet</span>
+
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// ok, now I'm ready</span>
+        <span class="nx">release</span><span class="p">();</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="sections" class="anchor" href="#sections"><span class="octicon octicon-link"></span></a>Sections</h2>
+
+<p>"Sections" are functions executed within a read or write lock and need not be
+released.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readSection</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'No one is writing now'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">lock</span><span class="p">.</span><span class="nx">writeSection</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'No one is reading now'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="keys" class="anchor" href="#keys"><span class="octicon octicon-link"></span></a>Keys</h2>
+
+<p>Every ReadWriteLock instance allows you to work on a virtually unlimited number of completely independent read/write locks.</p>
+
+<p>Locks are identified by names called "keys". Every exposed method has an optional "key" first argument indicating the lock to work on; if you don't specify a key, the default lock is used.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="s1">'lock1'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'writing 1...'</span><span class="p">);</span>
+    <span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="s1">'lock2'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'writing 2...'</span><span class="p">);</span>
+        <span class="nx">release</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done 2.'</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">release</span><span class="p">();</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done 1.'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>The previous example logs:</p>
+
+<pre><code>writing 1...
+writing 2...
+done 2.
+done 1.
+</code></pre>
+
+<h2>
+<a name="async-compatibility" class="anchor" href="#async-compatibility"><span class="octicon octicon-link"></span></a><a href="https://npmjs.org/package/async">async</a> compatibility</h2>
+
+<p>The ReadWriteLock class does not return errors to your callbacks, but many APIs in Node do. The <code>async</code> module uses that as a convention: callbacks usually receive two arguments, a possibly <code>null</code> error object and the actual result in case there is no error.</p>
+
+<p>To aid <code>async</code> compatibility, ReadWriteLock sends <code>null</code> errors if you specify the <code>async</code> flag like in the following example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// no need to check on error, it will always be null</span>
+
+    <span class="c1">// do stuff here</span>
+
+    <span class="nx">release</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>You can use <code>rwlock</code> and <code>async</code> together like in this example:</p>
+
+<p>TODO</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/71104">71104</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-36961344-7");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
