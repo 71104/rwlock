@@ -71,6 +71,10 @@ module.exports = function () {
 		if (!options) {
 			options = {};
 		}
+		var scope = null;
+		if (options.hasOwnProperty('scope')) {
+			scope = options.scope;
+		}
 		var release = (function () {
 			var released = false;
 			return function () {
@@ -84,27 +88,35 @@ module.exports = function () {
 			};
 		}());
 		if ((lock.readers < 0) || lock.queue.length) {
+			var terminated = false;
 			lock.queue.push(function () {
-				if (lock.readers >= 0) {
+				if (!terminated && (lock.readers >= 0)) {
+					terminated = true;
 					lock.queue.shift();
 					lock.readers++;
-					if (options.hasOwnProperty('scope')) {
-						callback.call(options.scope, release);
-					} else {
-						callback(release);
-					}
+					callback.call(scope, release);
 					if (lock.queue.length) {
 						lock.queue[0]();
 					}
 				}
 			});
+			if (options.hasOwnProperty('timeout')) {
+				var timeoutCallback = null;
+				if (options.hasOwnProperty('timeoutCallback')) {
+					timeoutCallback = options.timeoutCallback;
+				}
+				setTimeout(function () {
+					if (!terminated) {
+						terminated = true;
+						if (timeoutCallback) {
+							timeoutCallback.call(options.scope);
+						}
+					}
+				}, options.timeout);
+			}
 		} else {
 			lock.readers++;
-			if (options.hasOwnProperty('scope')) {
-				callback.call(options.scope, release);
-			} else {
-				callback(release);
-			}
+			callback.call(options.scope, release);
 		}
 	}
 
@@ -157,6 +169,10 @@ module.exports = function () {
 		if (!options) {
 			options = {};
 		}
+		var scope = null;
+		if (options.hasOwnProperty('scope')) {
+			scope = options.scope;
+		}
 		var release = (function () {
 			var released = false;
 			return function () {
@@ -170,24 +186,32 @@ module.exports = function () {
 			};
 		}());
 		if (lock.readers || lock.queue.length) {
+			var terminated = false;
 			lock.queue.push(function () {
-				if (!lock.readers) {
+				if (!terminated && !lock.readers) {
+					terminated = true;
 					lock.queue.shift();
 					lock.readers = -1;
-					if (options.hasOwnProperty('scope')) {
-						callback.call(options.scope, release);
-					} else {
-						callback(release);
-					}
+					callback.call(options.scope, release);
 				}
 			});
+			if (options.hasOwnProperty('timeout')) {
+				var timeoutCallback = null;
+				if (options.hasOwnProperty('timeoutCallback')) {
+					timeoutCallback = options.timeoutCallback;
+				}
+				setTimeout(function () {
+					if (!terminated) {
+						terminated = true;
+						if (timeoutCallback) {
+							timeoutCallback.call(scope);
+						}
+					}
+				}, options.timeout);
+			}
 		} else {
 			lock.readers = -1;
-			if (options.hasOwnProperty('scope')) {
-				callback.call(options.scope, release);
-			} else {
-				callback(release);
-			}
+			callback.call(options.scope, release);
 		}
 	}
 
