@@ -179,6 +179,7 @@ async.waterfall([function (next) {
 	fs.writeFile('file', 'content', next);
 }, function (next) {
 	releaseLock();
+	next(null);
 }], function (error) {
 	if (error) {
 		console.dir(error);
