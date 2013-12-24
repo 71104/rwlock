@@ -136,6 +136,7 @@ module.exports.lateReaderRelease = function (test) {
 		var released = false;
 		lock.writeLock(function (release) {
 			test.ok(released);
+			release();
 			test.done();
 		});
 		setTimeout(function () {
@@ -151,11 +152,151 @@ module.exports.lateWriterRelease = function (test) {
 		var released = false;
 		lock.readLock(function (release) {
 			test.ok(released);
+			release();
 			test.done();
 		});
 		setTimeout(function () {
 			released = true;
 			release();
 		}, 0);
+	});
+};
+
+module.exports.lateWriterReleaseAgainstAnotherWriter = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		var released = false;
+		lock.writeLock(function (release) {
+			test.ok(released);
+			release();
+			test.done();
+		});
+		setTimeout(function () {
+			released = true;
+			release();
+		}, 0);
+	});
+};
+
+module.exports.noReaderTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.readLock(function (release) {
+		lock.readLock(function (release) {
+			test.ok(true);
+			release();
+			test.done();
+		}, {
+			timeout: 0,
+			timeoutCallback: function () {
+				test.ok(false);
+				test.done();
+			}
+		});
+		setTimeout(release, 10);
+	});
+};
+
+module.exports.writerTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.readLock(function (release) {
+		lock.writeLock(function (release) {
+			test.ok(false);
+			test.done();
+		}, {
+			timeout: 0,
+			timeoutCallback: function () {
+				test.ok(true);
+				test.done();
+			}
+		});
+		setTimeout(release, 10);
+	});
+};
+
+module.exports.readerTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.readLock(function (release) {
+			test.ok(false);
+			test.done();
+		}, {
+			timeout: 0,
+			timeoutCallback: function () {
+				test.ok(true);
+				test.done();
+			}
+		});
+		setTimeout(release, 10);
+	});
+};
+
+module.exports.writerTimeoutAgainstAnotherWriter = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.writeLock(function (release) {
+			test.ok(false);
+			test.done();
+		}, {
+			timeout: 0,
+			timeoutCallback: function () {
+				test.ok(true);
+				test.done();
+			}
+		});
+		setTimeout(release, 10);
+	});
+};
+
+module.exports.avoidWriterTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.readLock(function (release) {
+		lock.writeLock(function (release) {
+			test.ok(true);
+			release();
+			test.done();
+		}, {
+			timeout: 10,
+			timeoutCallback: function () {
+				test.ok(false);
+				test.done();
+			}
+		});
+		setTimeout(release, 0);
+	});
+};
+
+module.exports.avoidReaderTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.readLock(function (release) {
+			test.ok(true);
+			release();
+			test.done();
+		}, {
+			timeout: 10,
+			timeoutCallback: function () {
+				test.ok(false);
+				test.done();
+			}
+		});
+		setTimeout(release, 0);
+	});
+};
+
+module.exports.avoidWriterTimeoutAgainstAnotherWriter = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.writeLock(function (release) {
+			test.ok(true);
+			release();
+			test.done();
+		}, {
+			timeout: 10,
+			timeoutCallback: function () {
+				test.ok(false);
+				test.done();
+			}
+		});
+		setTimeout(release, 0);
 	});
 };
