@@ -200,7 +200,32 @@ done 1.
 
 <p>You can use <code>rwlock</code> and <code>async</code> together like in this example:</p>
 
-<p>TODO</p>
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">releaseLock</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="nx">async</span><span class="p">.</span><span class="nx">waterfall</span><span class="p">([</span><span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="nx">next</span><span class="p">);</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">releaseLock</span> <span class="o">=</span> <span class="nx">release</span><span class="p">;</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="s1">'file'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">,</span> <span class="nx">next</span><span class="p">);</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">releaseLock</span><span class="p">();</span>
+    <span class="nx">next</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="p">}],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">releaseLock</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">releaseLock</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done.'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT. Copyright 2013 Alberto La Rocca</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/71104">71104</a></p>
