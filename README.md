@@ -169,4 +169,26 @@ lock.async.readLock(function (error, release) {
 
 You can use `rwlock` and `async` together like in this example:
 
-TODO
+```javascript
+var releaseLock;
+
+async.waterfall([function (next) {
+	lock.async.writeLock(next);
+}, function (release, next) {
+	releaseLock = release;
+	fs.writeFile('file', 'content', next);
+}, function (next) {
+	releaseLock();
+}], function (error) {
+	if (error) {
+		console.dir(error);
+	} else {
+		console.log('done.');
+	}
+});
+```
+
+License
+-------
+
+MIT. Copyright 2013 Alberto La Rocca
