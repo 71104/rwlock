@@ -5,7 +5,7 @@ Asynchronous read/write lock implementation for Node.js.
 
 Main rules:
 - there may be zero or more readers at a time,
-- there may only be one writer at a time,
+- there may be only one writer at a time,
 - there may be no writer if there are one or more readers already.
 
 Installation
