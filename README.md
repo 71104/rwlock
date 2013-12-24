@@ -104,8 +104,7 @@ lock.writeLock(function (release) {
 Sections
 --------
 
-"Sections" are functions executed within a read or write lock and need not be
-released.
+"Sections" are _synchronous_ functions executed within a read or write lock and need not be released.
 
 Example:
 
