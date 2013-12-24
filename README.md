@@ -207,7 +207,7 @@ $ grunt all
 
 The following folders will be generated:
 - **lib**, containing the minified ReadWriteLock class to `require` in Node.js;
-- **doc**, containing the API reference.
+- **doc**, containing the API reference documentation in HTML format.
 
 License
 -------
