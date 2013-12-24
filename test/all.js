@@ -129,3 +129,33 @@ module.exports.twoReadersOneWriter = function (test) {
 		release1();
 	});
 };
+
+module.exports.lateReaderRelease = function (test) {
+	var lock = new ReadWriteLock();
+	lock.readLock(function (release) {
+		var released = false;
+		lock.writeLock(function (release) {
+			test.ok(released);
+			test.done();
+		});
+		setTimeout(function () {
+			released = true;
+			release();
+		}, 0);
+	});
+};
+
+module.exports.lateWriterRelease = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		var released = false;
+		lock.readLock(function (release) {
+			test.ok(released);
+			test.done();
+		});
+		setTimeout(function () {
+			released = true;
+			release();
+		}, 0);
+	});
+};
