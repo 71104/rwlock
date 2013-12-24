@@ -191,6 +191,24 @@ async.waterfall([function (next) {
 });
 ```
 
+Building from source and testing
+--------------------------------
+
+You don't need this, but in case you want:
+
+```bash
+$ sudo npm install -g grunt-cli
+$ cd
+$ git clone https://github.com/71104/rwlock.git
+$ cd rwlock
+$ npm install
+$ grunt all
+```
+
+The following folders will be generated:
+- **lib**, containing the minified ReadWriteLock class to `require` in Node.js;
+- **doc**, containing the API reference.
+
 License
 -------
 
