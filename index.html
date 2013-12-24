@@ -221,38 +221,6 @@ done 1.
 <span class="p">});</span>
 </pre></div>
 
-<p>Using sections it will be even easier:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="nx">async</span><span class="p">.</span><span class="nx">series</span><span class="p">([</span><span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">writeSection</span><span class="p">(</span><span class="nx">next</span><span class="p">);</span>
-<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="s1">'file'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">,</span> <span class="nx">next</span><span class="p">);</span>
-<span class="p">}],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done.'</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-
-<p>But remember that the section terminates at the end of the next async task. In the following example, the last async task is <strong>not</strong> synchronized:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="nx">async</span><span class="p">.</span><span class="nx">series</span><span class="p">([</span><span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">writeSection</span><span class="p">(</span><span class="nx">next</span><span class="p">);</span>
-<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="s1">'file'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">,</span> <span class="nx">next</span><span class="p">);</span>
-<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'no lock here, I must not write to file'</span><span class="p">);</span>
-<span class="p">}],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done.'</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-
 <h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
