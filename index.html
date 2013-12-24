@@ -222,6 +222,26 @@ done 1.
 </pre></div>
 
 <h2>
+<a name="building-from-source-and-testing" class="anchor" href="#building-from-source-and-testing"><span class="octicon octicon-link"></span></a>Building from source and testing</h2>
+
+<p>You don't need this, but in case you want:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>sudo npm install -g grunt-cli
+<span class="nv">$ </span><span class="nb">cd</span>
+<span class="nv">$ </span>git clone https://github.com/71104/rwlock.git
+<span class="nv">$ </span><span class="nb">cd </span>rwlock
+<span class="nv">$ </span>npm install
+<span class="nv">$ </span>grunt all
+</pre></div>
+
+<p>The following folders will be generated:</p>
+
+<ul>
+<li>
+<strong>lib</strong>, containing the minified ReadWriteLock class to <code>require</code> in Node.js;</li>
+<li>
+<strong>doc</strong>, containing the API reference documentation in HTML format.</li>
+</ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>MIT. Copyright 2013 Alberto La Rocca</p>
