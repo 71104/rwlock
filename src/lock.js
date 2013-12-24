@@ -334,28 +334,28 @@ module.exports = function () {
 
 		readSection: function (key, callback, options) {
 			if (typeof key !== 'function') {
-				readSection(key, function (release) {
-					callback.call(this, null, release);
+				readSection(key, function () {
+					callback.call(this, null);
 				}, options);
 			} else {
 				callback = key;
 				options = callback;
-				readSection(function (release) {
-					callback.call(this, null, release);
+				readSection(function () {
+					callback.call(this, null);
 				}, options);
 			}
 		},
 
 		writeSection: function (key, callback, options) {
 			if (typeof key !== 'function') {
-				writeSection(key, function (release) {
-					callback.call(this, null, release);
+				writeSection(key, function () {
+					callback.call(this, null);
 				}, options);
 			} else {
 				callback = key;
 				options = callback;
-				writeSection(function (release) {
-					callback.call(this, null, release);
+				writeSection(function () {
+					callback.call(this, null);
 				}, options);
 			}
 		}
