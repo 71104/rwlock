@@ -170,7 +170,7 @@ lock.async.readLock(function (error, release) {
 You can use `rwlock` and `async` together like in this example:
 
 ```javascript
-var releaseLock;
+var releaseLock = null;
 
 async.waterfall([function (next) {
 	lock.async.writeLock(next);
@@ -182,6 +182,9 @@ async.waterfall([function (next) {
 	next(null);
 }], function (error) {
 	if (error) {
+		if (releaseLock) {
+			releaseLock();
+		}
 		console.dir(error);
 	} else {
 		console.log('done.');
