@@ -191,40 +191,6 @@ async.waterfall([function (next) {
 });
 ```
 
-Using sections it will be even easier:
-
-```javascript
-async.series([function (next) {
-	lock.async.writeSection(next);
-}, function (next) {
-	fs.writeFile('file', 'content', next);
-}], function (error) {
-	if (error) {
-		console.dir(error);
-	} else {
-		console.log('done.');
-	}
-});
-```
-
-But remember that the section terminates at the end of the next async task. In the following example, the last async task is **not** synchronized:
-
-```javascript
-async.series([function (next) {
-	lock.async.writeSection(next);
-}, function (next) {
-	fs.writeFile('file', 'content', next);
-}, function (next) {
-	console.log('no lock here, I must not write to file');
-}], function (error) {
-	if (error) {
-		console.dir(error);
-	} else {
-		console.log('done.');
-	}
-});
-```
-
 License
 -------
 
