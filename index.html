@@ -137,22 +137,6 @@
 </pre></div>
 
 <h2>
-<a name="sections" class="anchor" href="#sections"><span class="octicon octicon-link"></span></a>Sections</h2>
-
-<p>"Sections" are <em>synchronous</em> functions executed within a read or write lock and need not be released.</p>
-
-<p>Example:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readSection</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'No one is writing now'</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">lock</span><span class="p">.</span><span class="nx">writeSection</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'No one is reading now'</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
-
-<h2>
 <a name="keys" class="anchor" href="#keys"><span class="octicon octicon-link"></span></a>Keys</h2>
 
 <p>Every ReadWriteLock instance allows you to work on a virtually unlimited number of completely independent read/write locks.</p>
