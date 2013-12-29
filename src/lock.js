@@ -215,66 +215,8 @@ module.exports = function () {
 		}
 	}
 
-	/**
-	 * TODO
-	 *
-	 * @method readSection
-	 * @param [key] {String} TODO
-	 * @param callback {Function} TODO
-	 * @param [options] {Object} TODO
-	 * @param [options.scope] {Object} TODO
-	 * @param [options.timeout] {Number} TODO
-	 * @param [options.timeoutCallback] {Function} TODO
-	 */
-	function readSection(key, callback, options) {
-		if (typeof key !== 'function') {
-			if (!options) {
-				options = {};
-			}
-			readLock(key, function (release) {
-				callback.call(this);
-				release();
-			}, options);
-		} else {
-			readLock(function (release) {
-				callback.call(this);
-				release();
-			}, options);
-		}
-	}
-
-	/**
-	 * TODO
-	 *
-	 * @method writeSection
-	 * @param [key] {String} TODO
-	 * @param callback {Function} TODO
-	 * @param [options] {Object} TODO
-	 * @param [options.scope] {Object} TODO
-	 * @param [options.timeout] {Number} TODO
-	 * @param [options.timeoutCallback] {Function} TODO
-	 */
-	function writeSection(key, callback, options) {
-		if (typeof key !== 'function') {
-			if (!options) {
-				options = {};
-			}
-			writeLock(key, function (release) {
-				callback.call(this);
-				release();
-			}, options);
-		} else {
-			writeLock(function (release) {
-				callback.call(this);
-				release();
-			}, options);
-		}
-	}
-
 	this.readLock = readLock;
 	this.writeLock = writeLock;
-	this.readSection = readSection;
-	this.writeSection = writeSection;
 
 	this.async = {
 		/**
@@ -352,34 +294,6 @@ module.exports = function () {
 				options = callback;
 				writeLock(function (release) {
 					callback.call(this, null, release);
-				}, options);
-			}
-		},
-
-		readSection: function (key, callback, options) {
-			if (typeof key !== 'function') {
-				readSection(key, function () {
-					callback.call(this, null);
-				}, options);
-			} else {
-				callback = key;
-				options = callback;
-				readSection(function () {
-					callback.call(this, null);
-				}, options);
-			}
-		},
-
-		writeSection: function (key, callback, options) {
-			if (typeof key !== 'function') {
-				writeSection(key, function () {
-					callback.call(this, null);
-				}, options);
-			} else {
-				callback = key;
-				options = callback;
-				writeSection(function () {
-					callback.call(this, null);
 				}, options);
 			}
 		}

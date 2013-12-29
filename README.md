@@ -101,23 +101,6 @@ lock.writeLock(function (release) {
 });
 ```
 
-Sections
---------
-
-"Sections" are _synchronous_ functions executed within a read or write lock and need not be released.
-
-Example:
-
-```javascript
-lock.readSection(function () {
-	console.log('No one is writing now');
-});
-
-lock.writeSection(function () {
-	console.log('No one is reading now');
-});
-```
-
 Keys
 ----
 

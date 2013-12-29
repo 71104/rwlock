@@ -1,6 +1,6 @@
 {
 	"name": "rwlock",
-	"version": "3.2.0",
+	"version": "4.0.0",
 	"description": "A read/write lock implementation for Node.",
 	"homepage": "http://71104.github.io/rwlock",
 	"bugs": "https://github.com/71104/rwlock/issues",
