@@ -6,6 +6,8 @@
 	"bugs": "https://github.com/71104/rwlock/issues",
 	"license": "MIT",
 	"author": "Alberto La Rocca <a71104@gmail.com>",
+    "contributors": [{ "name" : "Christian Lerrahn",
+                       "email" : "git@penpal4u.net"}],
 	"files": [
 		"lib",
 		"LICENSE",
