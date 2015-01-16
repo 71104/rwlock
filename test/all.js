@@ -279,17 +279,16 @@ module.exports.writerTimeoutAgainstAnotherWriterNewWriter = function (test) {
 		}, {
 			timeout: 0
 		});
-        lock.writeLock(function (release) {
+		lock.writeLock(function (release) {
 			test.ok(true);
 			test.done();
 		}, {
 			timeout: 20,
-            timeoutCallback: function() {
-                test.ok(false);
-                test.done();
-            }
+			timeoutCallback: function() {
+				test.ok(false);
+				test.done();
+			}
 		});
-
 		setTimeout(release, 10);
 	});
 };

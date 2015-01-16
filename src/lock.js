@@ -108,7 +108,7 @@ module.exports = function () {
 				setTimeout(function () {
 					if (!terminated) {
 						terminated = true;
-                        lock.queue.shift();
+						lock.queue.shift();
 						if (timeoutCallback) {
 							timeoutCallback.call(options.scope);
 						}
@@ -204,7 +204,7 @@ module.exports = function () {
 				setTimeout(function () {
 					if (!terminated) {
 						terminated = true;
-                        lock.queue.shift();
+						lock.queue.shift();
 						if (timeoutCallback) {
 							timeoutCallback.call(scope);
 						}
