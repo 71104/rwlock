@@ -230,6 +230,29 @@ module.exports.readerTimeout = function (test) {
 	});
 };
 
+module.exports.readerTimeout = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.readLock(function (release) {
+			test.ok(false);
+			test.done();
+		}, {
+			timeout: 0
+		});
+		lock.readLock(function (release) {
+			test.ok(true);
+			test.done();
+		}, {
+			timeout: 20,
+			timeoutCallback: function () {
+				test.ok(false);
+				test.done();
+			}
+		});
+		setTimeout(release, 10);
+	});
+};
+
 module.exports.writerTimeoutAgainstAnotherWriter = function (test) {
 	var lock = new ReadWriteLock();
 	lock.writeLock(function (release) {
@@ -243,6 +266,30 @@ module.exports.writerTimeoutAgainstAnotherWriter = function (test) {
 				test.done();
 			}
 		});
+		setTimeout(release, 10);
+	});
+};
+
+module.exports.writerTimeoutAgainstAnotherWriterNewWriter = function (test) {
+	var lock = new ReadWriteLock();
+	lock.writeLock(function (release) {
+		lock.writeLock(function (release) {
+			test.ok(false);
+			test.done();
+		}, {
+			timeout: 0
+		});
+        lock.writeLock(function (release) {
+			test.ok(true);
+			test.done();
+		}, {
+			timeout: 20,
+            timeoutCallback: function() {
+                test.ok(false);
+                test.done();
+            }
+		});
+
 		setTimeout(release, 10);
 	});
 };
