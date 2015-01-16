@@ -195,4 +195,4 @@ The following folders will be generated:
 License
 -------
 
-MIT. Copyright 2013 Alberto La Rocca
+MIT. Copyright 2015 Alberto La Rocca
