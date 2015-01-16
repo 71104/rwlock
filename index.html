@@ -40,7 +40,7 @@
       </nav>
       <section>
         <h1>
-<a name="rwlock" class="anchor" href="#rwlock"><span class="octicon octicon-link"></span></a>rwlock</h1>
+<a id="rwlock" class="anchor" href="#rwlock" aria-hidden="true"><span class="octicon octicon-link"></span></a>rwlock</h1>
 
 <p>Asynchronous read/write lock implementation for Node.js.</p>
 
@@ -50,94 +50,89 @@
 <li>there may be zero or more readers at a time,</li>
 <li>there may be only one writer at a time,</li>
 <li>there may be no writer if there are one or more readers already.</li>
-</ul><h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>It's on <a href="https://npmjs.org/package/rwlock">npmjs</a>:</p>
 
-<div class="highlight highlight-bash"><pre><span class="nv">$ </span>npm install rwlock
-</pre></div>
+<div class="highlight highlight-bash"><pre>$ npm install rwlock</pre></div>
 
 <h2>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic usage</h2>
 
 <p>Requiring the package, creating an instance:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ReadWriteLock</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'rwlock'</span><span class="p">);</span>
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> ReadWriteLock <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>rwlock<span class="pl-pds">'</span></span>);
 
-<span class="kd">var</span> <span class="nx">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ReadWriteLock</span><span class="p">();</span>
-</pre></div>
+<span class="pl-s">var</span> lock <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ReadWriteLock</span>();</pre></div>
 
 <p>Acquiring a read lock:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// do stuff</span>
+<div class="highlight highlight-javascript"><pre>lock.readLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    <span class="pl-c">// do stuff</span>
 
-    <span class="nx">release</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+    release();
+});</pre></div>
 
 <p>Acquiring a write lock:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// do stuff</span>
+<div class="highlight highlight-javascript"><pre>lock.writeLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    <span class="pl-c">// do stuff</span>
 
-    <span class="nx">release</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+    release();
+});</pre></div>
 
 <p>Locks can be released later:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// not ready to release yet</span>
+<div class="highlight highlight-javascript"><pre>lock.readLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    <span class="pl-c">// not ready to release yet</span>
 
-    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="c1">// ok, now I'm ready</span>
-        <span class="nx">release</span><span class="p">();</span>
-    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
+    <span class="pl-s3">setTimeout</span>(<span class="pl-st">function</span> () {
+        <span class="pl-c">// ok, now I'm ready</span>
+        release();
+    }, <span class="pl-c1">1000</span>);
+});</pre></div>
 
 <h2>
-<a name="upgrading-to-a-write-lock" class="anchor" href="#upgrading-to-a-write-lock"><span class="octicon octicon-link"></span></a>Upgrading to a write lock</h2>
+<a id="upgrading-to-a-write-lock" class="anchor" href="#upgrading-to-a-write-lock" aria-hidden="true"><span class="octicon octicon-link"></span></a>Upgrading to a write lock</h2>
 
 <p>ReadWriteLock does not explicitly support upgrading but you can take advantage of the asynchronous-ness:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// read stuff here</span>
+<div class="highlight highlight-javascript"><pre>lock.readLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    <span class="pl-c">// read stuff here</span>
 
-    <span class="c1">// ok, I now realize I need to write</span>
+    <span class="pl-c">// ok, I now realize I need to write</span>
 
-    <span class="c1">// this will be queued</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// you can write here</span>
+    <span class="pl-c">// this will be queued</span>
+    lock.writeLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+        <span class="pl-c">// you can write here</span>
 
-        <span class="nx">release</span><span class="p">();</span>
+        release();
 
-        <span class="c1">// everything is now released.</span>
-    <span class="p">});</span>
+        <span class="pl-c">// everything is now released.</span>
+    });
 
-    <span class="c1">// release the read lock, this will activate the writer</span>
-    <span class="nx">release</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+    <span class="pl-c">// release the read lock, this will activate the writer</span>
+    release();
+});</pre></div>
 
 <h2>
-<a name="downgrading-to-a-read-lock" class="anchor" href="#downgrading-to-a-read-lock"><span class="octicon octicon-link"></span></a>Downgrading to a read lock</h2>
+<a id="downgrading-to-a-read-lock" class="anchor" href="#downgrading-to-a-read-lock" aria-hidden="true"><span class="octicon octicon-link"></span></a>Downgrading to a read lock</h2>
 
 <p>Similar to upgrading:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// ...</span>
-        <span class="nx">release</span><span class="p">();</span>
-    <span class="p">});</span>
-    <span class="nx">release</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-javascript"><pre>lock.writeLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    lock.readLock(<span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+        <span class="pl-c">// ...</span>
+        release();
+    });
+    release();
+});</pre></div>
 
 <h2>
-<a name="keys" class="anchor" href="#keys"><span class="octicon octicon-link"></span></a>Keys</h2>
+<a id="keys" class="anchor" href="#keys" aria-hidden="true"><span class="octicon octicon-link"></span></a>Keys</h2>
 
 <p>Every ReadWriteLock instance allows you to work on a virtually unlimited number of completely independent read/write locks.</p>
 
@@ -145,17 +140,16 @@
 
 <p>Example:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="s1">'lock1'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'writing 1...'</span><span class="p">);</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="s1">'lock2'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'writing 2...'</span><span class="p">);</span>
-        <span class="nx">release</span><span class="p">();</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done 2.'</span><span class="p">);</span>
-    <span class="p">});</span>
-    <span class="nx">release</span><span class="p">();</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done 1.'</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-javascript"><pre>lock.writeLock(<span class="pl-s1"><span class="pl-pds">'</span>lock1<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>writing 1...<span class="pl-pds">'</span></span>);
+    lock.writeLock(<span class="pl-s1"><span class="pl-pds">'</span>lock2<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">release</span>) {
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>writing 2...<span class="pl-pds">'</span></span>);
+        release();
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>done 2.<span class="pl-pds">'</span></span>);
+    });
+    release();
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>done 1.<span class="pl-pds">'</span></span>);
+});</pre></div>
 
 <p>The previous example logs:</p>
 
@@ -166,57 +160,55 @@ done 1.
 </code></pre>
 
 <h2>
-<a name="async-compatibility" class="anchor" href="#async-compatibility"><span class="octicon octicon-link"></span></a><a href="https://npmjs.org/package/async">async</a> compatibility</h2>
+<a id="async-compatibility" class="anchor" href="#async-compatibility" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a href="https://npmjs.org/package/async">async</a> compatibility</h2>
 
 <p>The ReadWriteLock class does not return errors to your callbacks, but many APIs in Node do. The <code>async</code> module uses that as a convention: callbacks usually receive two arguments, a possibly <code>null</code> error object and the actual result in case there is no error.</p>
 
 <p>To aid <code>async</code> compatibility, ReadWriteLock sends <code>null</code> errors if you specify the <code>async</code> flag like in the following example:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">readLock</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">release</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// no need to check on error, it will always be null</span>
+<div class="highlight highlight-javascript"><pre>lock.async.readLock(<span class="pl-st">function</span> (<span class="pl-vpf">error</span>, <span class="pl-vpf">release</span>) {
+    <span class="pl-c">// no need to check on error, it will always be null</span>
 
-    <span class="c1">// do stuff here</span>
+    <span class="pl-c">// do stuff here</span>
 
-    <span class="nx">release</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+    release();
+});</pre></div>
 
 <p>You can use <code>rwlock</code> and <code>async</code> together like in this example:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">releaseLock</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> releaseLock <span class="pl-k">=</span> <span class="pl-c1">null</span>;
 
-<span class="nx">async</span><span class="p">.</span><span class="nx">waterfall</span><span class="p">([</span><span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">lock</span><span class="p">.</span><span class="nx">async</span><span class="p">.</span><span class="nx">writeLock</span><span class="p">(</span><span class="nx">next</span><span class="p">);</span>
-<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">release</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">releaseLock</span> <span class="o">=</span> <span class="nx">release</span><span class="p">;</span>
-    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="s1">'file'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">,</span> <span class="nx">next</span><span class="p">);</span>
-<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">releaseLock</span><span class="p">();</span>
-    <span class="nx">next</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
-<span class="p">}],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">releaseLock</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">releaseLock</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'done.'</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
+async.waterfall([<span class="pl-st">function</span> (<span class="pl-vpf">next</span>) {
+    lock.async.writeLock(next);
+}, <span class="pl-st">function</span> (<span class="pl-vpf">release</span>, <span class="pl-vpf">next</span>) {
+    releaseLock <span class="pl-k">=</span> release;
+    fs.writeFile(<span class="pl-s1"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>content<span class="pl-pds">'</span></span>, next);
+}, <span class="pl-st">function</span> (<span class="pl-vpf">next</span>) {
+    releaseLock();
+    next(<span class="pl-c1">null</span>);
+}], <span class="pl-st">function</span> (<span class="pl-vpf">error</span>) {
+    <span class="pl-k">if</span> (error) {
+        <span class="pl-k">if</span> (releaseLock) {
+            releaseLock();
+        }
+        <span class="pl-en">console</span>.<span class="pl-sc">dir</span>(error);
+    } <span class="pl-k">else</span> {
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>done.<span class="pl-pds">'</span></span>);
+    }
+});</pre></div>
 
 <h2>
-<a name="building-from-source-and-testing" class="anchor" href="#building-from-source-and-testing"><span class="octicon octicon-link"></span></a>Building from source and testing</h2>
+<a id="building-from-source-and-testing" class="anchor" href="#building-from-source-and-testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building from source and testing</h2>
 
 <p>You don't need this, but in case you want:</p>
 
-<div class="highlight highlight-bash"><pre><span class="nv">$ </span>sudo npm install -g grunt-cli
-<span class="nv">$ </span><span class="nb">cd</span>
-<span class="nv">$ </span>git clone https://github.com/71104/rwlock.git
-<span class="nv">$ </span><span class="nb">cd </span>rwlock
-<span class="nv">$ </span>npm install
-<span class="nv">$ </span>grunt all
-</pre></div>
+<div class="highlight highlight-bash"><pre>$ sudo npm install -g grunt-cli
+$ <span class="pl-s3">cd</span>
+$ git clone https://github.com/71104/rwlock.git
+$ <span class="pl-s3">cd</span> rwlock
+$ npm install
+$ grunt all</pre></div>
 
 <p>The following folders will be generated:</p>
 
@@ -225,10 +217,12 @@ done 1.
 <strong>lib</strong>, containing the minified ReadWriteLock class to <code>require</code> in Node.js;</li>
 <li>
 <strong>doc</strong>, containing the API reference documentation in HTML format.</li>
-</ul><h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+</ul>
 
-<p>MIT. Copyright 2013 Alberto La Rocca</p>
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT. Copyright 2015 Alberto La Rocca</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/71104">71104</a></p>
