@@ -149,7 +149,7 @@ module.exports = function () {
 	 * @param [options.scope] {Object} An optional object to use as `this` when
 	 * calling the `callback` function.
 	 * @param [options.timeout] {Number} A timeout in milliseconds within which
-	 * the lock must be acquired; if one ore more readers are still operating
+	 * the lock must be acquired; if one or more readers are still operating
 	 * and the timeout expires the request is canceled and no lock is acquired.
 	 * @param [options.timeoutCallback] {Function} An optional user-defined
 	 * callback function that gets invokes in case the timeout expires before
@@ -279,7 +279,7 @@ module.exports = function () {
 		 * @param [options.scope] {Object} An optional object to use as `this`
 		 * when calling the `callback` function.
 		 * @param [options.timeout] {Number} A timeout in milliseconds within
-		 * which the lock must be acquired; if one ore more readers are still
+		 * which the lock must be acquired; if one or more readers are still
 		 * operating and the timeout expires the request is canceled and no lock
 		 * is acquired.
 		 * @param [options.timeoutCallback] {Function} An optional user-defined
